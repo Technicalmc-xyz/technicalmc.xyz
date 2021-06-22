@@ -1,0 +1,33 @@
+[package]
+name = "tmc-wiki-apiv2"
+version = "0.1.0"
+authors = ["Jack <jackbaude@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+diesel = { version = "1.4", features = ["postgres", "numeric", "uuidv07", "chrono", "serde_json"] }
+diesel_full_text_search = { git = "https://github.com/diesel-rs/diesel_full_text_search", branch = "master"}
+async-trait = "0.1.48"
+chrono = { version = "0.4", features = ["serde"] }
+serde = {version = "1.0.8", features = ["derive"]}
+serde_json = "1"
+oauth2 = { version = "3.0", features = ["futures-03", "reqwest-010"], default-features = false }
+reqwest = { version = "0.11", features = ["json"] }
+dotenv = "0.15.0"
+futures = "0.3.12"
+failure = "0.1.8"
+anyhow = "1.0.38"
+url = { version = "2.1", features = ["serde"] }
+termion = "1.5.6"
+git2 = "0.13"
+
+[dependencies.rocket]
+version = "0.5.0-rc.1"
+features = ["json", "secrets"]
+
+[dependencies.rocket_sync_db_pools]
+version = "0.1.0-rc.1"
+default-features = false
+features = ["diesel_postgres_pool"]

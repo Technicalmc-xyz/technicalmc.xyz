@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.book {
+    /* position: absolute; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 18.5rem;
+    height: 12.5rem;
+    perspective: 70rem;
+}
+.cover {
+    background-color: #10b981;
+    transform: rotateY(0deg);
+    width: 9.25rem;
+    height: 12.5rem;
+}
+.cover::after {
+    content: "Technical Minecraft Wiki";
+    text-align: center;
+    color: beige;
+}
+.page {
+    top: 0.25rem;
+    left: 0.25rem;
+    background-color: #e9e6c4;
+    transform: rotateY(0deg);
+    width: 9rem;
+    height: 12rem;
+    text-align: center;
+    font-size: 1.125rem;
+    color: #777;
+    font-family: monospace;
+}
+.page::before {
+    display: block;
+    content: "";
+    padding-bottom: 2.5rem;
+}
+
+.page::after {
+    display: block;
+    content: "404 page is not found";
+    padding-bottom: 1rem;
+}
+.cover,
+.page {
+    position: absolute;
+    padding: 1rem;
+    transform-origin: 100% 0;
+    border-radius: 5px 0 0 5px;
+    box-shadow: inset 3px 0px 20px rgba(0, 0, 0, 0.2),
+        0px 0px 15px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+.cover.turn {
+    animation: bookCover 3s forwards;
+}
+.page.turn {
+    animation: bookOpen 3s forwards;
+}
+.page:nth-of-type(1) {
+    animation-delay: 0.05s;
+}
+.page:nth-of-type(2) {
+    animation-delay: 0.33s;
+}
+.page:nth-of-type(3) {
+    animation-delay: 0.66s;
+}
+.page:nth-of-type(4) {
+    animation: bookOpen150deg 3s forwards;
+    animation-delay: 0.99s;
+}
+.page:nth-of-type(5) {
+    animation: bookOpen30deg 3s forwards;
+    animation-delay: 1.2s;
+}
+.page:nth-of-type(6) {
+    animation: bookOpen30deg 3s forwards;
+    animation-delay: 1.25s;
+}
+@keyframes bookOpen {
+    30% {
+        z-index: 999;
+    }
+    100% {
+        transform: rotateY(180deg);
+        z-index: 999;
+    }
+}
+@keyframes bookCover {
+    30% {
+        z-index: 999;
+    }
+    100% {
+        transform: rotateY(180deg);
+        z-index: 1;
+    }
+}
+@keyframes bookOpen150deg {
+    30% {
+        z-index: 999;
+    }
+    100% {
+        transform: rotateY(150deg);
+        z-index: 999;
+    }
+}
+@keyframes bookOpen100deg {
+    30% {
+        z-index: 999;
+    }
+    100% {
+        transform: rotateY(100deg);
+        z-index: 999;
+    }
+}
+@keyframes bookOpen55deg {
+    30% {
+        z-index: 999;
+    }
+    100% {
+        transform: rotateY(55deg);
+        z-index: 999;
+    }
+}
+@keyframes bookOpen30deg {
+    50% {
+        z-index: 999;
+    }
+    100% {
+        transform: rotateY(30deg);
+        z-index: 999;
+    }
+}
+.loader-dots div {
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.loader-dots div:nth-child(1) {
+    left: 8px;
+    animation: loader-dots1 0.6s infinite;
+}
+.loader-dots div:nth-child(2) {
+    left: 8px;
+    animation: loader-dots2 0.6s infinite;
+}
+.loader-dots div:nth-child(3) {
+    left: 32px;
+    animation: loader-dots2 0.6s infinite;
+}
+.loader-dots div:nth-child(4) {
+    left: 56px;
+    animation: loader-dots3 0.6s infinite;
+}
+@keyframes loader-dots1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes loader-dots3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes loader-dots2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(24px, 0);
+    }
+}

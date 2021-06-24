@@ -1,0 +1,32 @@
+[global.databases]
+postgres_db = { url= "postgres://user:pass@localhost:5432/wiki"}
+
+[debug]
+address = "127.0.0.1"
+port = 8000
+workers = 8
+keep_alive = 5
+read_timeout = 5
+write_timeout = 5
+log = "normal"
+limits = { forms = 32768 }
+
+[staging]
+address = "0.0.0.0"
+port = 8000
+workers = 8
+keep_alive = 5
+read_timeout = 5
+write_timeout = 5
+log = "normal"
+limits = { forms = 32768 }
+
+[release]
+address = "0.0.0.0"
+port = 8000
+workers = 8
+keep_alive = 5
+read_timeout = 5
+write_timeout = 5
+log = "critical"
+limits = { forms = 32768 }

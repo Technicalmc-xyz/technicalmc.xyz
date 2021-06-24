@@ -22,12 +22,11 @@ mod webhooks;
 
 pub type Cache = Mutex<HashMap<String, Value>>;
 
-pub fn rocket_factory(config_name: &str) -> Result<Rocket<Build>, String> {
+pub fn rocket_factory() -> Result<Rocket<Build>, String> {
     git::start_up();
-    let (app_config, rocket_config, oauth_state) =
-        config::get_rocket_config(config_name).map_err(|x| format!("{}", x))?;
+    let (app_config, oauth_state) = config::get_rocket_config().map_err(|x| format!("{}", x))?;
     let cache: Cache = Mutex::new(HashMap::new());
-    let rocket = rocket::custom(rocket_config)
+    let rocket = rocket::build()
         .attach(database::DbConn::fairing())
         .manage(app_config)
         .manage(oauth_state)

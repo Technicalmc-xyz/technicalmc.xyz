@@ -1,5 +1,5 @@
 use dotenv::dotenv;
-use std::env;
+// use std::env;
 
 #[rocket::main]
 async fn main() -> Result<(), String> {
@@ -10,8 +10,8 @@ async fn main() -> Result<(), String> {
  / / / -_) __/ _ \\/ _ \\/ / __/ _ `/ / / /|_/ / / _ \\/ -_) __/ __/ _ `/ _/ __/  | |/ |/ / /  '_// /
 /_/  \\__/\\__/_//_/_//_/_/\\__/\\_,_/_/ /_/  /_/_/_//_/\\__/\\__/_/  \\_,_/_/ \\__/   |__/|__/_/_/\\_\\/_/
 ");
-    let config_name = env::var("CONFIG_ENV").expect("CONFIG must be set");
-    let rocket = tmc_wiki_apiv2::rocket_factory(&config_name)?;
+    // let config_name = env::var("CONFIG_ENV").expect("CONFIG must be set");
+    let rocket = tmc_wiki_apiv2::rocket_factory()?;
     rocket.launch().await.unwrap();
     Ok(())
 }

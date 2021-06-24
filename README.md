@@ -20,13 +20,27 @@ The site is run completely out of Jakku's pocket and although he is glad to run 
 
 # Web Development
 ## Web development start
-`npm install`
+```
+npm install
+```
 
-`npm run dev`
+```
+npm run dev
+```
 
 
 # Api Development
-## First Startup
+*Complete the setup before running the api!*
+## Development mode
+```
+ROCKET_SECRET_KEY="$(openssl rand -base64 32)" cargo run --bin main
+```
+## Release mode
+```
+ROCKET_SECRET_KEY="$(openssl rand -base64 32)" cargo run --bin main --release
+```
+
+## Setup
 
 [Install nightly with rustup](https://rustup.rs/)
 

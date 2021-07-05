@@ -91,7 +91,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
                     <div className="sidebar-content px-4 py-6 sticky top-0">
                         <ul className="flex flex-col w-full">
                             <li className="my-px">
-                                <span className="flex font-medium text-sm text-gray-300 px-4 my-4 uppercase">
+                                <span className="flex font-medium text-sm text-gray-500 px-4 my-4 uppercase">
                                     Wiki
                                 </span>
                             </li>
@@ -113,7 +113,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
                             />
 
                             <li className="my-px">
-                                <span className="flex font-medium text-sm text-gray-300 px-4 my-4 uppercase">
+                                <span className="flex font-medium text-sm text-gray-500 px-4 my-4 uppercase">
                                     Account
                                 </span>
                             </li>
@@ -142,7 +142,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
                             {user && user?.rank > 4 ? (
                                 <>
                                     <li className="my-px">
-                                        <span className="flex font-medium text-sm text-gray-300 px-4 my-4 uppercase">
+                                        <span className="flex font-medium text-sm text-gray-500 px-4 my-4 uppercase">
                                             Admin
                                         </span>
                                     </li>
@@ -206,7 +206,6 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
                         {/* Page Contents here */}
                         {children}
                     </div>
-
                     <Footer />
                 </main>
             </div>

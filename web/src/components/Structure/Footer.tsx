@@ -30,7 +30,7 @@ const Footer: FC<FooterProps> = ({}) => (
                             <li className="mt-2 inline-block mr-2 sm:block sm:mr-0">
                                 <a
                                     target="_blank"
-                                    href="https://discord.gg/3PzsupVD5E"
+                                    href="https://streamelements.com/jjakuu/tip"
                                     className="text-grey hover:text-grey-dark"
                                 >
                                     Support

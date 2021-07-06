@@ -85,7 +85,14 @@ const EditArticle: NextPage<{ data: ArticleResponse }> = (props) => {
     }
     const SubmitButton: FC = () => {
         if (signOff && message.length > 0) {
-            return <button onClick={submitArticle}>Submit Edits</button>;
+            return (
+                <button
+                    className="border rounded-lg px-5 py-2 bg-green-200 text-green-900 hover:bg-green-300 text-sm"
+                    onClick={submitArticle}
+                >
+                    Submit Edits
+                </button>
+            );
         } else {
             return null;
         }

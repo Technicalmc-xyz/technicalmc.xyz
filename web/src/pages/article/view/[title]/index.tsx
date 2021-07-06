@@ -4,7 +4,6 @@ import { GetServerSideProps, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { ArticleResponse } from "../../../../types";
 import ArticleEditor from "../../../../components/Editor/ArticleEditor";
-import Link from "next/link";
 
 const getTitle = (params?: ParsedUrlQuery) => {
     if (!params?.title) {

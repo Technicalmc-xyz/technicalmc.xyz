@@ -1,7 +1,7 @@
 import React from "react";
 import { NextPage } from "next";
 import Head from "next/head";
-const Faq: NextPage = () => (
+const Contact: NextPage = () => (
     <div>
         <Head>
             <title>Technical Minecraft Wiki</title>
@@ -54,36 +54,21 @@ const Faq: NextPage = () => (
             />
         </Head>
         <div className="space-y-6 w-full">
-            <h1 className="text-2xl w-full text-center">
-                Frequently Asked Questions
-            </h1>
-            <p className="text-center">
-                Some of the most commonly asked questions about the technical
-                minecraft wiki.
-            </p>
-            <hr />
-            <details className="p-3 border rounded-lg">
-                <summary className="text-lg w-full font-bold">
-                    Why cannot I not see my new article after I created it?
-                </summary>
-                <p className="mt-5">
-                    A: Although we like to see everyones new information brought
-                    to the site we also want to prevent spam and new articles on
-                    topics that we find off topic{" "}
-                </p>
-            </details>
-            <details className="p-3 border rounded-lg">
-                <summary className="text-lg w-full font-bold">
-                    How do I install (fill in the blank) mod?
-                </summary>
-                <p className="mt-5">
-                    While mods are a large part of the technical aspect of
-                    minecraft we do not aim to support mod help or any specifics
-                    on mods
-                </p>
-            </details>
+            <h1 className="text-2xl w-full text-center">Contact</h1>
+            <section className="text-lg text-center">
+                If you need to contact the Technical Minecraft Wiki please do so
+                via our
+                <a
+                    target="_blank"
+                    href="https://discord.gg/FcTFg2E"
+                    className="text-blue-500 hover:text-grey-dark"
+                >
+                    {" "}
+                    discord server{" "}
+                </a>
+            </section>
         </div>
     </div>
 );
 
-export default Faq;
+export default Contact;

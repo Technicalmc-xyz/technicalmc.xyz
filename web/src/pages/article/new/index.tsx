@@ -94,7 +94,7 @@ const NewArticle: NextPage = () => {
             );
         }
     };
-    const submitPost = () => {
+    const submitArticle = () => {
         if (selectedTags.length < 1 || selectedTags.length > 4) {
             setFailedMessage("You must select between 1 and 3 tags!");
             setFailed(true);
@@ -160,8 +160,11 @@ const NewArticle: NextPage = () => {
     const SubmitButton = () => {
         if (madeChanges) {
             return (
-                <button className="mt-10" onClick={submitPost}>
-                    Create Post
+                <button
+                    className="border rounded-lg px-5 py-2 bg-green-200 text-green-900 hover:bg-green-300 mt-10 text-sm"
+                    onClick={submitArticle}
+                >
+                    Submit Edits
                 </button>
             );
         } else return null;

@@ -48,9 +48,9 @@ export const FeaturedArticles: FC<FeaturedArticlesProps> = () => {
                                             </Link>
                                         </h1>
                                         {tags.map((t) => (
-                                            <div className="ml-2">
-                                            <Tag title={t} key={t} />
-                                                </div>
+                                            <div className="ml-2" key={t}>
+                                                <Tag title={t} key={t} />
+                                            </div>
                                         ))}
                                         <p className="absolute right-0 text-sm">
                                             {new Date(

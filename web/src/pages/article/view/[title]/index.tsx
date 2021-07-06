@@ -4,6 +4,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { ArticleResponse } from "../../../../types";
 import ArticleEditor from "../../../../components/Editor/ArticleEditor";
+import Link from "next/link";
 
 const getTitle = (params?: ParsedUrlQuery) => {
     if (!params?.title) {
@@ -92,6 +93,12 @@ const Article: NextPage<{ data: ArticleResponse }> = (props) => {
             </Head>
             <h1 className="text-5xl underline">{props.data.title}</h1>
             <p className="text-sm italic mb-10">
+                <a
+                    className="mr-5 text-blue-500 not-italic text-md"
+                    href={`/article/edit/${props.data.urn_title}`}
+                >
+                    Edit page
+                </a>
                 Last edited: {new Date(props.data.last_edited).toLocaleString()}
             </p>
             <ArticleEditor initValue={value} readonly={true} />

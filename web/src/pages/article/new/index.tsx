@@ -7,6 +7,7 @@ import ArticleEditor from "../../../components/Editor/ArticleEditor";
 import Alert from "../../../components/Alert";
 import Tag from "../../../components/Tag";
 import TagSelector from "../../../components/TagSelector";
+import Head from "next/head";
 
 const NewArticle: NextPage = () => {
     const [authenticated, setAuthenticated] = useState<boolean>();
@@ -193,7 +194,57 @@ const NewArticle: NextPage = () => {
     } else {
         return (
             <div>
-                <FailedPost message={failedMessage} failed={failed}/>
+                <Head>
+                    <title>New Article | Technical Minecraft Wiki</title>
+                    <meta
+                        property="og:title"
+                        content="New Article | Technical Minecraft Wiki"
+                    />
+                    <meta
+                        property="og:description"
+                        content="Create a new article on the technical minecraft wiki."
+                    />
+                    <meta
+                        property="og:image"
+                        content="https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/220/height/220?cb=20190917030625"
+                    />
+                    <meta property="og:url" content="https://technicalmc.xyz" />
+                    <script
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{
+                            __html: JSON.stringify({
+                                "@context": "https://schema.org",
+                                "@type": "NewsArticle",
+                                mainEntityOfPage: {
+                                    "@type": "WebPage",
+                                    "@id": "https://technicalmc.xyz/about",
+                                },
+                                headline: "Technical Minecraft Wiki",
+                                image: [
+                                    "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/220/height/220?cb=20190917030625",
+                                    "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/100/height/100?cb=20190917030625",
+                                    "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/40/height/40?cb=20190917030625",
+                                ],
+                                datePublished: "2021-02-25T18:55:25Z",
+                                dateModified: "2021-02-25T18:55:25Z",
+                                author: {
+                                    "@type": "Organization",
+                                    name: "Technical Minecraft Wiki",
+                                },
+                                publisher: {
+                                    "@type": "Organization",
+                                    name: "Technical Minecraft Wiki",
+                                    logo: {
+                                        "@type": "ImageObject",
+                                        url:
+                                            "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/220/height/220?cb=20190917030625",
+                                    },
+                                },
+                            }),
+                        }}
+                    />
+                </Head>
+                <FailedPost message={failedMessage} failed={failed} />
                 <SearchResults />
                 <input
                     id={"title"}
@@ -233,7 +284,6 @@ const NewArticle: NextPage = () => {
                 />
 
                 <ArticleEditor
-                    initValue={initialValue}
                     readonly={false}
                     placeholder={"Start writing ..."}
                 />

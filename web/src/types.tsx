@@ -1,5 +1,3 @@
-import { SlateDocument, DEFAULTS_PARAGRAPH } from "@udecode/slate-plugins";
-
 export interface Article {
     urn_title: string;
     title: string;
@@ -23,7 +21,7 @@ export type ArticleResponse = {
     edit_count: number;
     publicized: boolean;
     featured: boolean;
-    body: SlateDocument;
+    body: any[] | undefined
 };
 
 export interface User {
@@ -33,20 +31,6 @@ export interface User {
     avatar: string;
     rank: number;
 }
-export const initialValue: SlateDocument = [
-    {
-        children: [
-            {
-                type: DEFAULTS_PARAGRAPH.p.type,
-                children: [
-                    {
-                        text: "",
-                    },
-                ],
-            },
-        ],
-    },
-];
 
 export const tags: string[] = [
     "Block Resource",

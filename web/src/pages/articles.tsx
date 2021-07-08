@@ -6,8 +6,7 @@ import Alert from "../components/Alert";
 import Loader from "../components/Loader";
 import Tag from "../components/Tag";
 import TagSelector from "../components/TagSelector";
-;
-
+import Head from "next/head";
 const Articles = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
@@ -52,7 +51,7 @@ const Articles = () => {
             );
         }
         if (loading) {
-            return <Loader/>
+            return <Loader />;
         } else {
             return searchQuery.length > 0 ? (
                 <ListArticles articles={searchResults} />
@@ -67,7 +66,8 @@ const Articles = () => {
     }
     // Callback functions that the tagselector calls
     const addTag = (tag: string) => setSelectedTags([...selectedTags, tag]);
-    const removeTag = (tag: string) =>setSelectedTags(selectedTags.filter((item) => item !== tag));
+    const removeTag = (tag: string) =>
+        setSelectedTags(selectedTags.filter((item) => item !== tag));
 
     const ListArticles: FC<ListArticleProps> = ({ articles, ...props }) => {
         if (articles.length === 0) {
@@ -118,7 +118,7 @@ const Articles = () => {
                                                 }
                                                 className="mr-2"
                                             >
-                                                <Tag title={t} key={t}/>
+                                                <Tag title={t} key={t} />
                                             </button>
                                         ))}
                                         <p className="absolute right-0 text-sm">
@@ -137,7 +137,58 @@ const Articles = () => {
 
     return (
         <div>
-            <TagSelector selectedTags={selectedTags} addTag={addTag} removeTag={removeTag} />
+            <Head>
+                <title>Articles | Technical Minecraft Wiki</title>
+                <meta property="og:title" content="Articles | Technical Minecraft Wiki" />
+                <meta
+                    property="og:description"
+                    content="The latest and greatest articles from the technical minecraft wiki."
+                />
+                <meta
+                    property="og:image"
+                    content="https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/220/height/220?cb=20190917030625"
+                />
+                <meta property="og:url" content="https://technicalmc.xyz" />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "NewsArticle",
+                            mainEntityOfPage: {
+                                "@type": "WebPage",
+                                "@id": "https://technicalmc.xyz/about",
+                            },
+                            headline: "Technical Minecraft Wiki",
+                            image: [
+                                "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/220/height/220?cb=20190917030625",
+                                "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/100/height/100?cb=20190917030625",
+                                "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/40/height/40?cb=20190917030625",
+                            ],
+                            datePublished: "2021-02-25T18:55:25Z",
+                            dateModified: "2021-02-25T18:55:25Z",
+                            author: {
+                                "@type": "Organization",
+                                name: "Technical Minecraft Wiki",
+                            },
+                            publisher: {
+                                "@type": "Organization",
+                                name: "Technical Minecraft Wiki",
+                                logo: {
+                                    "@type": "ImageObject",
+                                    url:
+                                        "https://static.wikia.nocookie.net/minecraft/images/d/d3/KnowledgeBookNew.png/revision/latest/top-crop/width/220/height/220?cb=20190917030625",
+                                },
+                            },
+                        }),
+                    }}
+                />
+            </Head>
+            <TagSelector
+                selectedTags={selectedTags}
+                addTag={addTag}
+                removeTag={removeTag}
+            />
             <input
                 id="search"
                 name="description"

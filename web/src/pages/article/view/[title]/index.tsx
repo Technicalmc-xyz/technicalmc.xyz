@@ -91,14 +91,14 @@ const Article: NextPage<{ data: ArticleResponse }> = (props) => {
                 />
             </Head>
             <h1 className="text-5xl underline">{props.data.title}</h1>
-            <p className="text-sm italic mb-10">
+            <p className="text-sm italic">Last edited: {new Date(props.data.last_edited).toLocaleString()}</p>
+            <p className="text-sm italic">
                 <a
-                    className="mr-5 text-blue-500 not-italic text-md"
+                    className="text-blue-500 not-italic text-md"
                     href={`/article/edit/${props.data.urn_title}`}
                 >
                     Edit page
                 </a>
-                Last edited: {new Date(props.data.last_edited).toLocaleString()}
             </p>
             <ArticleEditor initValue={value} readonly={true} />
         </div>

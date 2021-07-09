@@ -46,7 +46,7 @@ const Profile = () => {
                     <div className="flex">
                         <img
                             src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`}
-                            alt="TMW"
+                            alt="user image"
                             className="rounded-full shadow-md mr-5"
                         />
                         <div>

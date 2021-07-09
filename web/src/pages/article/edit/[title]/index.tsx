@@ -1,11 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import Head from "next/head";
 import { GetServerSideProps, NextPage } from "next";
-import {
-    SlateDocument,
-    UseSlatePluginsEffectsOptions,
-    SPEditor,
-} from "@udecode/slate-plugins";
 import { ParsedUrlQuery } from "querystring";
 import { FailedPost } from "../../../../components/Article/FailedPost";
 import { ArticleResponse } from "../../../../types";
@@ -71,7 +66,7 @@ const EditArticle: NextPage<{ data: ArticleResponse }> = (props) => {
         props.data.description
     );
     const [selectedTags, setSelectedTags] = useState<string[]>(props.data.tags);
-    const value: UseSlatePluginsEffectsOptions<SPEditor> = props.data.body;
+    const value: any[] | undefined = props.data.body;
     const [signOff, setSignOff] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
     const [success, setSuccess] = useState(false);
@@ -182,9 +177,7 @@ const EditArticle: NextPage<{ data: ArticleResponse }> = (props) => {
         return (
             <div>
                 <Head>
-                    <meta property="og:title" 
-                    content={title} 
-                    key="title" />
+                    <meta property="og:title" content={title} key="title" />
                     <meta
                         property="og:description"
                         content={props.data.description}

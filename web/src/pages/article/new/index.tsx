@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { NextPage } from "next";
 import { FailedPost } from "../../../components/Article/FailedPost";
-import { Article, initialValue } from "../../../types";
+import { Article } from "../../../types";
 import ArticleEditor from "../../../components/Editor/ArticleEditor";
 import Alert from "../../../components/Alert";
 import Tag from "../../../components/Tag";

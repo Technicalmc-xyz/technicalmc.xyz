@@ -8,7 +8,12 @@ interface TagSelectorProps {
     removeTag: (tag: string) => void;
 }
 
-const TagSelector: FC<TagSelectorProps> = ({ selectedTags, addTag, removeTag, ...props }) => {
+const TagSelector: FC<TagSelectorProps> = ({
+    selectedTags,
+    addTag,
+    removeTag,
+    ...props
+}) => {
     return (
         <div {...props} className="flex flex-wrap">
             {tags.map((tag: string) => (
@@ -16,17 +21,13 @@ const TagSelector: FC<TagSelectorProps> = ({ selectedTags, addTag, removeTag, ..
                     {selectedTags.includes(tag) ? (
                         <button
                             onClick={() => {
-                                removeTag(tag)
+                                removeTag(tag);
                             }}
                         >
                             <Tag title={tag} selected={true} />
                         </button>
                     ) : (
-                        <button
-                            onClick={() =>
-                                addTag(tag)
-                            }
-                        >
+                        <button onClick={() => addTag(tag)}>
                             <Tag title={tag} selected={false} />
                         </button>
                     )}

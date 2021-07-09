@@ -73,7 +73,7 @@ const ArticleAdmin = () => {
             );
         }
         if (loading) {
-            return <Loader/>
+            return <Loader />;
         } else {
             return searchQuery.length > 0 ? (
                 <ArticleTable articles={searchResults} />
@@ -234,7 +234,9 @@ const ArticleAdmin = () => {
                         className="inset-1/3 absolute bg-gray-50 rounded-xl p-10 border-2 shadow-lg border-green-500"
                         overlayClassName="bg-gray-100 bg-opacity-50 inset-0 fixed"
                     >
-                        <h1 className="text-3xl">Delete <i>{removeTitle}</i></h1>
+                        <h1 className="text-3xl">
+                            Delete <i>{removeTitle}</i>
+                        </h1>
                         <p className="font-bold text-sm">
                             Please confirm by typing the title of the article
                             you want to remove

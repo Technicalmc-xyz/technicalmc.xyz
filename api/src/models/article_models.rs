@@ -352,7 +352,7 @@ impl WriteEditArticle {
         }
 
         let mut file = OpenOptions::new()
-            .read(true)
+            .truncate(true)
             .write(true)
             .open(Path::new(&path_name))
             .unwrap();

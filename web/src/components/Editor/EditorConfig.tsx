@@ -5,8 +5,6 @@ import {
     createSlatePluginsOptions,
 } from "@udecode/slate-plugins";
 
-
-
 export const options = createSlatePluginsOptions({
     [ELEMENT_H1]: {
         hotkey: ["mod+opt+1", "mod+shift+1"],
@@ -21,4 +19,4 @@ export const options = createSlatePluginsOptions({
 
 export const editableProps = {
     placeholder: "Start writing here...",
-}
+};

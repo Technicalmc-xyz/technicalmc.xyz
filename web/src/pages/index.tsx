@@ -5,10 +5,7 @@ const Index = () => (
     <div>
         <Head>
             <title>Technical Minecraft Wiki</title>
-            <meta
-                property="og:title"
-                content="Technical Minecraft Wiki"
-            />
+            <meta property="og:title" content="Technical Minecraft Wiki" />
             <meta
                 property="og:description"
                 content="The center of information for the technical minecraft community."

@@ -139,7 +139,10 @@ const Articles = () => {
         <div>
             <Head>
                 <title>Articles | Technical Minecraft Wiki</title>
-                <meta property="og:title" content="Articles | Technical Minecraft Wiki" />
+                <meta
+                    property="og:title"
+                    content="Articles | Technical Minecraft Wiki"
+                />
                 <meta
                     property="og:description"
                     content="The latest and greatest articles from the technical minecraft wiki."

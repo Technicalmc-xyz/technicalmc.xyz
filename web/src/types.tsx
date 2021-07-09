@@ -21,7 +21,7 @@ export type ArticleResponse = {
     edit_count: number;
     publicized: boolean;
     featured: boolean;
-    body: any[] | undefined
+    body: any[] | undefined;
 };
 
 export interface User {

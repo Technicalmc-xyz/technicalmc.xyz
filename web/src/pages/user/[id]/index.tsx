@@ -56,7 +56,9 @@ const Profile: NextPage<{ user: User }> = (props) => {
                         <UserRankBadge rank={props.user.rank} />
                     </h1>
                     <i className="font-thin text-xs">{props.user.id}</i>
-                    <h5 className="font-semibold">#{props.user.discriminator}</h5>
+                    <h5 className="font-semibold">
+                        #{props.user.discriminator}
+                    </h5>
                 </div>
             </div>
         </div>

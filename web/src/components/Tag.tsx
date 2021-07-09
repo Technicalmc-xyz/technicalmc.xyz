@@ -4,7 +4,7 @@ interface TagProps {
     selected?: boolean;
 }
 
-const Tag: FC<TagProps> = ({ title, selected=true, ...props }) =>
+const Tag: FC<TagProps> = ({ title, selected = true, ...props }) =>
     selected ? (
         <span
             className="text-sm font-medium bg-green-200 bg-opacity-75 text-green-700 font-bold py-1 px-2 rounded align-middle"

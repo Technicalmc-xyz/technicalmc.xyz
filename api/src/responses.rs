@@ -32,7 +32,16 @@ impl From<DieselError> for APIResponse {
         internal_server_error()
     }
 }
-
+impl From<oauth2::url::ParseError> for APIResponse {
+    fn from(_: oauth2::url::ParseError) -> Self {
+        internal_server_error()
+    }
+}
+impl From<std::env::VarError> for APIResponse {
+    fn from(_: std::env::VarError) -> Self {
+        internal_server_error()
+    }
+}
 impl<'r> Responder<'r, 'static> for APIResponse {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         let body = self.data;

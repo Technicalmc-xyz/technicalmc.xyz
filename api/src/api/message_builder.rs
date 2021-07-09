@@ -1,9 +1,11 @@
-use crate::responses::{unauthorized, APIResponse, ok};
 use crate::models::user_models::UserModel;
-use serde::{Deserialize, Serialize};
+use crate::responses::{ok, unauthorized, APIResponse};
+use crate::webhooks::{Author, DiscordWebhook, Embed, Field, Footer, Thumbnail};
 use rocket::post;
-use crate::webhooks::{DiscordWebhook, Embed, Footer, Thumbnail, Author, Field};
 use rocket::serde::json::Json;
+use serde::{Deserialize, Serialize};
+use std::env;
+use reqwest::Url;
 
 /// What the frontend sends
 #[derive(Serialize, Deserialize)]
@@ -15,10 +17,15 @@ pub struct Message {
 }
 
 #[post("/new", data = "<body>", format = "application/json")]
-pub async fn new_message(_user: &UserModel, body: Json<Message>) -> Result<APIResponse, APIResponse> {
+pub async fn new_message(
+    _user: &UserModel,
+    body: Json<Message>,
+) -> Result<APIResponse, APIResponse> {
     if _user.rank < 5 {
         return Ok(unauthorized().message("You are not authorized to perform this action!"));
     }
+
+    let discord_url = Url::parse(&*env::var("DISCORD_ANNOUNCEMENT_WEBHOOK")?)?;
     let msg = body.0;
     let embed_message = DiscordWebhook {
         username: "technicalmc.xyz".to_string(),
@@ -45,10 +52,6 @@ pub async fn new_message(_user: &UserModel, body: Json<Message>) -> Result<APIRe
         ]
     };
     let client = reqwest::Client::new();
-    client.post("https://discord.com/api/webhooks/808563830979428382/Q1pcOBX2rzv_KJBx3tMrnsp-1PFc6hAfPJKQJdb08EZJoy3_6AgQOWtAVbIusVOybSgZ")
-        .json(&embed_message)
-        .send()
-        .await.unwrap();
+    client.post(discord_url).json(&embed_message).send().await.unwrap();
     Ok(ok().message("ok"))
 }
-

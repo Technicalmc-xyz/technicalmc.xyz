@@ -29,8 +29,6 @@ import {
     createResetNodePlugin,
     createSoftBreakPlugin,
     createExitBreakPlugin,
-    createNormalizeTypesPlugin,
-    ELEMENT_H1,
     createTrailingBlockPlugin,
     ELEMENT_PARAGRAPH,
     createSelectOnBackspacePlugin,
@@ -41,30 +39,41 @@ import {
     withProps,
     ELEMENT_OL,
     ELEMENT_UL,
+    ELEMENT_H1,
+    ELEMENT_H2,
 } from "@udecode/slate-plugins";
-import {editableProps, options } from "./EditorConfig";
+import { editableProps, options } from "./EditorConfig";
 import { ToolbarButtons } from "./ArticleToolbar";
 import { ReactEditor } from "slate-react";
 import { HistoryEditor } from "slate-history";
-import { optionsResetBlockTypePlugin, optionsSoftBreakPlugin, optionsExitBreakPlugin } from "./pluginOptions";
+import {
+    optionsResetBlockTypePlugin,
+    optionsSoftBreakPlugin,
+    optionsExitBreakPlugin,
+} from "./pluginOptions";
 import { optionsAutoformat } from "./autoformatRules";
 import { CustomUnorderedList, CustomOrderedList } from "./components/Listitems";
+import { Heading1, Heading2 } from "./components/Headings";
+import { DocumentOutline } from "./components/DocumentOutline";
+import { createEditor } from "slate";
 
 export interface ArticleEditorProps {
     readonly: boolean;
     placeholder?: string;
-    initValue?: any[] | undefined
+    initValue?: any[] | undefined;
 }
-type TEditor = SPEditor & ReactEditor & HistoryEditor
+type TEditor = SPEditor & ReactEditor & HistoryEditor;
 
 const components = createSlatePluginsComponents({
+    [ELEMENT_H1]: withProps(Heading1, {}),
+    [ELEMENT_H2]: withProps(Heading2, {}),
     [ELEMENT_UL]: withProps(CustomUnorderedList, {}),
     [ELEMENT_OL]: withProps(CustomOrderedList, {}),
 });
 
 const ArticleEditor: FC<ArticleEditorProps> = ({
     readonly,
-    initValue 
+    initValue,
 }: ArticleEditorProps) => {
     const [value, setValue] = useState<any[] | undefined>(initValue);
     const pluginsMemo: SlatePlugin<TEditor>[] = useMemo(() => {
@@ -104,20 +113,25 @@ const ArticleEditor: FC<ArticleEditorProps> = ({
 
         return plugins;
     }, [options]);
-
+    let editor = createEditor();
     return (
         <SlatePlugins
-            editableProps={{...editableProps, readOnly: readonly}}
+            editableProps={{ ...editableProps, readOnly: readonly }}
             options={options}
             initialValue={value}
             plugins={pluginsMemo}
             components={components}
+            editor={editor as TEditor}
             onChange={(newValue) => {
                 setValue(newValue);
                 localStorage.setItem("content", JSON.stringify(value));
             }}
         >
-            {readonly ? null : <ToolbarButtons />}
+            {readonly ? (
+                <DocumentOutline editor={editor} />
+            ) : (
+                <ToolbarButtons />
+            )}
         </SlatePlugins>
     );
 };

@@ -180,7 +180,18 @@ export const ToolbarButtonsTable = () => (
     </>
 );
 export const ToolbarButtons = () => (
-    <HeadingToolbar>
+    <HeadingToolbar
+        styles={{
+            root: {
+                flexWrap: "wrap",
+                position: "sticky",
+                top: "4.50rem",
+                background: "white",
+                zIndex: 9,
+                width: "full",
+            },
+        }}
+    >
         <ToolbarButtonsBasicElements />
         <ToolbarButtonsList />
         <ToolbarButtonsBasicMarks />

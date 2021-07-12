@@ -13,6 +13,20 @@
         @apply text-lg;
         @apply text-opacity-50;
     }
+    p {
+        @apply mt-5
+    }
+    /* a {
+        @apply text-blue-500
+    } */
+    /* ol {
+        @apply list-decimal;
+        @apply ml-7;
+    }
+    ul {
+        @apply list-disc;
+        @apply ml-7;
+    } */
 }
 .book {
     /* position: absolute; */

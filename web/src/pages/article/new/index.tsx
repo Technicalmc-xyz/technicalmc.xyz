@@ -165,7 +165,7 @@ const NewArticle: NextPage = () => {
                     className="border rounded-lg px-5 py-2 bg-green-200 text-green-900 hover:bg-green-300 mt-10 text-sm"
                     onClick={submitArticle}
                 >
-                    Submit Edits
+                    Create Article
                 </button>
             );
         } else return null;

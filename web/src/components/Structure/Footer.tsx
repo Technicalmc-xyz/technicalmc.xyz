@@ -10,7 +10,7 @@ const Footer: FC<FooterProps> = ({}) => (
                         <p className="uppercase text-grey text-sm sm:mb-6">
                             Links
                         </p>
-                        <ul className="list-reset text-xs mb-6">
+                        <ul className="list-reset text-xs mb-6 list-none m-0">
                             <li className="mt-2 inline-block mr-2 sm:block sm:mr-0">
                                 <a
                                     href="/faq"
@@ -42,7 +42,7 @@ const Footer: FC<FooterProps> = ({}) => (
                         <p className="uppercase text-grey text-sm sm:mb-6">
                             Legal
                         </p>
-                        <ul className="list-reset text-xs mb-6">
+                        <ul className="list-reset text-xs mb-6 list-non m-0">
                             <li className="mt-2 inline-block mr-2 sm:block sm:mr-0">
                                 <a
                                     href="#"
@@ -114,6 +114,30 @@ const Footer: FC<FooterProps> = ({}) => (
                                     className="text-grey hover:text-grey-dark"
                                 >
                                     Contact
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="block sm:table-cell">
+                        <p className="uppercase text-grey text-sm sm:mb-6">
+                            Wiki
+                        </p>
+                        <ul className="list-reset text-xs mb-6">
+                            <li className="mt-2 inline-block mr-2 sm:block sm:mr-0">
+                                <a
+                                    href="/style-guide"
+                                    className="text-grey hover:text-grey-dark"
+                                >
+                                    Styling
+                                </a>
+                            </li>
+                            <li className="mt-2 inline-block mr-2 sm:block sm:mr-0">
+                                <a
+                                    href="https://github.com/Technicalmc-xyz/technicalmc.xyz/projects/2"
+                                    target="_blank"
+                                    className="text-grey hover:text-grey-dark"
+                                >
+                                    Plans
                                 </a>
                             </li>
                         </ul>

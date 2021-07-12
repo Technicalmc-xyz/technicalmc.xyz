@@ -8,6 +8,11 @@ use std::collections::HashMap;
 use std::convert::TryFrom;
 use crate::models::article_models::{NewArticle, EditArticle};
 
+// Allow some punctiaon but not all
+pub fn char_is_okay(c: &char) -> bool {
+    matches!(c, '!'..='&' | '('..='.')
+}
+
 #[rocket::async_trait]
 impl<'r> FromData<'r> for NewArticle {
     type Error = Value;
@@ -54,11 +59,11 @@ impl<'r> FromData<'r> for NewArticle {
                 .push("The contents of the title must be alphanumeric");
         }
 
-        if !(article.description.chars().all(|x| x.is_alphanumeric() || x.is_whitespace())) {
+        if !(article.description.chars().all(|x| x.is_alphanumeric() || char_is_okay(&x) || x.is_whitespace())) {
             errors
                 .entry("title contents")
                 .or_insert_with(|| vec![])
-                .push("The contents of the description must be alphanumeric");
+                .push("The contents of the description must be alphanumeric, or some of the limited special punctuation");
         }
 
         // Check the length of the title and the description to make sure they follow Open Graph
@@ -143,13 +148,13 @@ impl<'r> FromData<'r> for EditArticle {
                 .or_insert_with(|| vec![])
                 .push("The contents of the title must be alphanumeric");
         }
-        // Check that the title and the description are alphanumeric
 
-        if !(article.description.chars().all(|x| x.is_alphanumeric() || x.is_whitespace())) {
+        // Check that the title and the description are alphanumeric
+        if !(article.description.chars().all(|x| x.is_alphanumeric() || char_is_okay(&x) || x.is_whitespace())) {
             errors
                 .entry("title contents")
                 .or_insert_with(|| vec![])
-                .push("The contents of the description must be alphanumeric");
+                .push("The contents of the description must be alphanumeric, or some of the limited special punctuation");
         }
 
         // Check the length of the title and the description to make sure they follow Open Graph

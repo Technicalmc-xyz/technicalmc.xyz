@@ -80,7 +80,7 @@ install build-essential
 
 To make sure that diesel works you need to install the postgres server; instructions [here](https://www.postgresql.org/download/)
 
-#### 2. To install Diesel ORM
+#### 3. To install Diesel ORM
 
 ```
 cargo install diesel_cli --no-default-features --features postgres
@@ -88,7 +88,7 @@ cargo install diesel_cli --no-default-features --features postgres
 
 More instrunctions on how to install diesel [here](https://diesel.rs/guides/getting-started)
 
-### Install Podman
+#### 4. Install Podman
 
 Install podman, see [here](https://podman.io/getting-started/installation).
 

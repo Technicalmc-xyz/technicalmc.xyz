@@ -157,7 +157,7 @@ const StyleGuide: NextPage = () => (
                 <li>
                     Articles about people are allowed only if the person in
                     question is a developer of <i>Minecraft</i> and/or either a
-                    part of or closely related to Mojang Studios. .
+                    part of or closely related to Mojang Studios.
                 </li>
                 <li>
                     Features that are not currently in the game should be

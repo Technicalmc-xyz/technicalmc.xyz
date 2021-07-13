@@ -2,11 +2,14 @@
 ![book](book.png)
 
 ## Find us
-[Discord Server](https://discord.gg/FcTFg2E)
-
 [technicalmc.xyz](https://technicalmc.xyz)
 
+[Discord Server](https://discord.gg/FcTFg2E)
 
+# Consider Funding Us
+1. [Donate via coindrop](https://coindrop.to/technicalmc-xyz)
+2. [Donate via streamelemnts](https://streamelements.com/jjakuu/tip)
+   
 # Mission
 The mission for the Technical Minecraft Wiki is to gather everyone's information into one spot. We believe this will significantly better the community by making it easier for new players to start exploring the world of technical minecraft.
 
@@ -45,6 +48,8 @@ ROCKET_SECRET_KEY="$(openssl rand -base64 32)" cargo run --bin main --release
 [Install nightly with rustup](https://rustup.rs/)
 
 ### Diesel ORM
+*Make sure that you have installed a postgres server and client on your machine. Also make sure you have build-essentials installed!*
+
 Install Diesel ORM CLI
 ```
 cargo install diesel_cli --no-default-features --features postgres
@@ -63,41 +68,25 @@ diesel migration run
 ## Database Startup
 Install podman. See [here](https://podman.io/getting-started/installation).
 
-1. `chmod +x start_podman`
-2. `./start_podman`
 
 ### Manually start podman containers
 ```
 podman pod create -n tmc-wiki-pod -p 8080:8080,5432:5432
 ```
 ```
-podman ps -a --pod
-```
-```
-podman run -dt --pod tmc-wiki-pod --rm --name postgres-wiki -e 
-```
-```
-POSTGRES_PASSWORD=pass -e POSTGRES_USER=user -e POSTGRES_DB=wiki -v 
-```
-```
-pgdata:/var/lib/postgresql/data postgres
+podman run -dt --pod tmc-wiki-pod --rm --name postgres-wiki -e POSTGRES_PASSWORD=pass -e POSTGRES_USER=user -e POSTGRES_DB=wiki -v pgdata:/var/lib/postgresql/data postgres
 ```
 
 ### Start backup database container
 
 ```
-podman run --pod tmc-wiki-pod --rm -u postgres:postgres -e 
-```
-```
-POSTGRES_HOST=postgres-wiki -e POSTGRES_DB=wiki -e POSTGRES_USER=user -e 
-```
-```
+podman run --pod tmc-wiki-pod --rm -u postgres:postgres -e POSTGRES_HOST=postgres-wiki -e POSTGRES_DB=wiki -e POSTGRES_USER=user -e 
 POSTGRES_PASSWORD=pass -e prodrigestivill/postgres-backup-local
 ```
 
 ### Connect to the database to run SQL
 ```
-docker exec -it postgres-wiki bash
+podman exec -it postgres-wiki bash
 ```
 ```
 psql -h localhost -p 5432 -U user -d wiki -W
@@ -107,3 +96,5 @@ psql -h localhost -p 5432 -U user -d wiki -W
 [Rocket http server](https://rocket.rs/)
 
 [Diesel ORM](https://diesel.rs/)
+
+[Nextjs]("https://nextjs.org/")

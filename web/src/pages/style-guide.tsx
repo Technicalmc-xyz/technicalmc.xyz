@@ -99,7 +99,7 @@ const StyleGuide: NextPage = () => (
                             </a>
                         </li>
                         <li>
-                            3.5
+                            3.8
                             <a
                                 href="#guidelines-for-linking"
                                 className="text-blue-500"
@@ -108,7 +108,7 @@ const StyleGuide: NextPage = () => (
                             </a>
                         </li>
                         <li>
-                            3.8
+                            3.9
                             <a
                                 href="#date-formatting"
                                 className="text-blue-500"
@@ -117,13 +117,13 @@ const StyleGuide: NextPage = () => (
                             </a>
                         </li>
                         <li>
-                            3.9
+                            3.10
                             <a href="#coordinates" className="text-blue-500">
                                 Coordinates
                             </a>
                         </li>
                         <li>
-                            3.10
+                            3.11
                             <a href="#commands" className="text-blue-500">
                                 Commands
                             </a>

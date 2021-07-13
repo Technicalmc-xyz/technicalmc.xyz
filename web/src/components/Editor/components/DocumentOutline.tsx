@@ -69,7 +69,7 @@ export const DocumentOutline: FC<DocumentOutlineProps> = ({ editor }) => {
                                 </ul>
                             ) : (
                                 <>
-                                    {index}.{" "}
+                                    {index}{" "}
                                     <CreateHashLink contents={contents} />
                                 </>
                             )}

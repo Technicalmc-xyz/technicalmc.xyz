@@ -19,19 +19,19 @@ const StyleGuide: NextPage = () => (
             <h4>Document Outline</h4>
             <ul className="ml-5">
                 <li>
-                    1.
+                    1&nbsp;
                     <a href="#notability" className="text-blue-500">
                         Notability
                     </a>
                     <ul className="ml-5">
                         <li>
-                            1.1
+                            1.1&nbsp;
                             <a href="#general" className="text-blue-500">
                                 General
                             </a>
                         </li>
                         <li>
-                            1.2
+                            1.2&nbsp;
                             <a href="#community" className="text-blue-500">
                                 Community
                             </a>
@@ -39,19 +39,19 @@ const StyleGuide: NextPage = () => (
                     </ul>
                 </li>
                 <li>
-                    2.
+                    2&nbsp;
                     <a href="#article-titles" className="text-blue-500">
                         Article Titles
                     </a>
                 </li>
                 <li>
-                    3.
+                    3&nbsp;
                     <a href="#writing" className="text-blue-500">
                         Writing
                     </a>
                     <ul className="ml-5">
                         <li>
-                            3.1
+                            3.1&nbsp;
                             <a
                                 href="#keeping-articles-concise-and-up-to-date"
                                 className="text-blue-500"
@@ -60,25 +60,25 @@ const StyleGuide: NextPage = () => (
                             </a>
                         </li>
                         <li>
-                            3.2
+                            3.2&nbsp;
                             <a href="#quotes" className="text-blue-500">
                                 Quotes
                             </a>
                         </li>
                         <li>
-                            3.3
+                            3.3&nbsp;
                             <a href="#spelling" className="text-blue-500">
                                 Spelling
                             </a>
                         </li>
                         <li>
-                            3.4
+                            3.4&nbsp;
                             <a href="#capitalization" className="text-blue-500">
                                 Capitalization
                             </a>
                         </li>
                         <li>
-                            3.5
+                            3.5&nbsp;
                             <a
                                 href="#section-headings"
                                 className="text-blue-500"
@@ -87,19 +87,19 @@ const StyleGuide: NextPage = () => (
                             </a>
                         </li>
                         <li>
-                            3.6
+                            3.6&nbsp;
                             <a href="#images" className="text-blue-500">
                                 Images
                             </a>
                         </li>
                         <li>
-                            3.7
+                            3.7&nbsp;
                             <a href="#linking" className="text-blue-500">
                                 Linking
                             </a>
                         </li>
                         <li>
-                            3.8
+                            3.8&nbsp;
                             <a
                                 href="#guidelines-for-linking"
                                 className="text-blue-500"
@@ -108,7 +108,7 @@ const StyleGuide: NextPage = () => (
                             </a>
                         </li>
                         <li>
-                            3.9
+                            3.9&nbsp;
                             <a
                                 href="#date-formatting"
                                 className="text-blue-500"
@@ -117,13 +117,13 @@ const StyleGuide: NextPage = () => (
                             </a>
                         </li>
                         <li>
-                            3.10
+                            3.10&nbsp;
                             <a href="#coordinates" className="text-blue-500">
                                 Coordinates
                             </a>
                         </li>
                         <li>
-                            3.11
+                            3.11&nbsp;
                             <a href="#commands" className="text-blue-500">
                                 Commands
                             </a>
@@ -167,7 +167,7 @@ const StyleGuide: NextPage = () => (
                         title="Mentioned features"
                         className="text-blue-500"
                     >
-                        mentioned features
+                        mentioned features&nbsp;
                     </a>
                     article.
                     <ol>
@@ -233,7 +233,7 @@ const StyleGuide: NextPage = () => (
                     <li>
                         If the feature does not have an in game name, it should
                         follow the same format as other articles of the same
-                        type. For example, the mob Spider Jockey .
+                        type. For example, the mob Spider Jockey.
                     </li>
                     <li>
                         If the article is about multiple things in the game, the

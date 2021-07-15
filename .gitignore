@@ -38,8 +38,6 @@ package-lock.json
 #vscode
 .vscode
 
-.env.local
-
 /target
 *.iml
 /.idea

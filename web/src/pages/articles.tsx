@@ -95,10 +95,10 @@ const Articles = () => {
                             tags,
                             last_edited,
                         }: Article) => (
-                            <div key={id}>
+                            <Link href={`/article/view/${urn_title}`}>
                                 <div
-                                    className="border-2 rounded-md p-5 mb-3 hover:border-green-500"
-                                    // bg={featured ? "purple.100": null}
+                                    className="border rounded-md p-5 mb-3 hover:border-green-500 cursor-pointer"
+                                    key={id}
                                 >
                                     <div className="flex relative">
                                         <h1 className="mr-10 text-lg">
@@ -128,7 +128,7 @@ const Articles = () => {
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         )
                     )}
             </div>

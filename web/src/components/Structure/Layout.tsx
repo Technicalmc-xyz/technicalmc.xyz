@@ -72,7 +72,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
     return (
         <div className="min-h-screen" {...props}>
             <div className="flex flex-row min-h-screen text-gray-800">
-                <aside className="sidebar w-64 md:shadow transform -translate-x-full md:translate-x-0 transition-transform duration-150 ease-in">
+                <aside className="sidebar w-64 shadow transform -translate-x-full md:translate-x-0 transition-transform duration-150 ease-in z-10">
                     <div className="sidebar-header flex items-center justify-center py-4">
                         <div className="inline-flex">
                             <a
@@ -88,7 +88,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
                             </a>
                         </div>
                     </div>
-                    <div className="sidebar-content px-4 py-6 sticky top-0">
+                    <nav className="sidebar-content px-4 py-6 sticky top-0">
                         <ul className="flex flex-col w-full">
                             <li className="my-px">
                                 <span className="flex font-medium text-sm text-gray-500 px-4 my-4 uppercase">
@@ -164,53 +164,61 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
                                 </>
                             ) : null}
                         </ul>
-                    </div>
+                    </nav>
                 </aside>
-                <main className="main flex flex-col flex-grow -ml-64 md:ml-0 transition-all duration-150 ease-in">
-                    <header className="sticky header bg-white shadow py-4 px-4 top-0 z-10">
-                        <div className="header-content flex items-center flex-row">
-                            <div className="hidden md:flex relative w-3/4">
-                                <button
-                                    id="search"
-                                    name="search"
-                                    value={searchQuery}
-                                    className="group border px-3 rounded-lg leading-6 flex items-center space-x-2 sm:space-x-4 hover:text-gray-600 transition-colors duration-200 w-full py-2"
-                                    // className="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 w-full rounded-lg border border-gray-300 w-full h-10 focus:outline-none focus:border-green-500"
-                                    placeholder="Search..."
-                                    onClick={openModal}
-                                >
-                                    <AiOutlineSearch />
-                                    <span>Search...</span>
-                                    <span className="ml-auto text-gray-400 text-sm leading-5 py-0.5 px-1.5 border border-gray-300 rounded-md">
+				<div className="min-h-screen w-full flex flex-col z-0">
+					<div className="px-12 h-full">
+						<div className="sticky py-8 top-0 bg-white">
+							<header className="header bg-white">
+								<div className="header-content flex items-center flex-row">
+									<div className="hidden md:flex relative w-full">
+										<button
+											id="search"
+											name="search"
+											value={searchQuery}
+											className="group border px-3 rounded-lg leading-6 flex items-center space-x-2 sm:space-x-4 hover:text-gray-600 transition-colors duration-200 w-full py-2"
+											// className="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 w-full rounded-lg border border-gray-300 w-full h-10 focus:outline-none focus:border-green-500"
+											placeholder="Search..."
+											onClick={openModal}
+										>
+											<AiOutlineSearch />
+											<span>Search...</span>
+											<span className="ml-auto text-gray-400 text-sm leading-5 py-0.5 px-1.5 border border-gray-300 rounded-md">
                                         Ctrl + K
                                     </span>
-                                </button>
-                            </div>
-                            {user ? (
-                                <LoginButton
-                                    authenticated={authenticated}
-                                    user={user}
-                                />
-                            ) : null}
-                        </div>
-                    </header>
-                    <TopSearchBar
-                        searchResults={searchResults}
-                        searchQuery={searchQuery}
-                        modalIsOpen={modalIsOpen}
-                        closeModal={closeModal}
-                        clearSearchQuery={clearSearchQuery}
-                        handleSearchChange={handleSearchChange}
-                    />
-                    <div className="container mx-auto mt-12 mb-24 pb-5 h-full">
-                        {/* Page Contents here */}
-                        {children}
-                    </div>
-                    <Footer />
-                </main>
-            </div>
-        </div>
-    );
+										</button>
+									</div>
+									{user ? (
+										<LoginButton
+											authenticated={authenticated}
+											user={user}
+										/>
+									) : null}
+								</div>
+							</header>
+							<TopSearchBar
+								searchResults={searchResults}
+								searchQuery={searchQuery}
+								modalIsOpen={modalIsOpen}
+								closeModal={closeModal}
+								clearSearchQuery={clearSearchQuery}
+								handleSearchChange={handleSearchChange}
+							/>
+						</div>
+
+						<main className="h-full main flex flex-col flex-grow transition-all duration-150 ease-in">
+							<div className="container mb-24 pb-5 h-full">
+								{/* Page Contents here */}
+								{children}
+							</div>
+						</main>
+					</div>
+
+					<Footer />
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default Layout;

@@ -2,7 +2,7 @@ import { FC } from "react";
 
 interface FooterProps {}
 const Footer: FC<FooterProps> = ({}) => (
-    <footer className="footer bg-white shadow py-4 px-4 bottom-0">
+    <footer className="footer bg-white py-4 px-4 bottom-0">
         <section className="bg-white py-8 w-full">
             <div className="container mx-auto px-8">
                 <div className="table w-full">

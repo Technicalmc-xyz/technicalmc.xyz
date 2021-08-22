@@ -20,7 +20,7 @@ const StyleGuide: NextPage = () => (
             this page always has precedence over its subpages and the Wikipedia
             style guide.
         </p>
-        <div className="border p-5 my-5 w-min bg-gray-50 whitespace-nowrap">
+        <div className="border border-contrast-400 rounded-lg bg-[#f9fafB] dark:bg-[#333333] p-5 my-5 w-min whitespace-nowrap">
             <h4>Document Outline</h4>
             <ul className="ml-5">
                 <li>

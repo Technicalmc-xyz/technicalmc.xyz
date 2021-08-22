@@ -16,7 +16,8 @@ export const SideBar: React.FC<{
 
 	return (
 		<aside
-			className="sidebar w-64 shadow transform -translate-x-full md:translate-x-0 transition-transform hidden md:block duration-150 ease-in z-10 bg-contrast-300">
+			className="sidebar w-64 shadow-sidebar-custom transform -translate-x-full md:translate-x-0 transition-transform hidden
+				md:block duration-150 ease-in z-10 bg-contrast-300">
 			<div className="sidebar-header flex items-center justify-center py-4">
 				<div className="inline-flex">
 					<a

@@ -72,28 +72,30 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
 
     return (
     	<DarkModeCtx.Provider value={{ dark, setDark }}>
-			<div className="min-h-screen" {...props}>
-				<div className="flex flex-row min-h-screen text-gray-800">
+			<div className="min-h-screen bg-contrast-300 text-contrast-700" {...props}>
+				<div className="flex flex-row min-h-screen">
 					<SideBar authenticated={authenticated} user={user}/>
 
 					<div className="min-h-screen w-full flex flex-col z-0">
 						<div className="px-12 h-full">
-							<div className="py-8 top-0 bg-white">
-								<header className="header bg-white">
+							<div className="py-8 top-0">
+								<header className="header">
 									<div className="header-content flex items-center flex-row">
-										<div className="hidden md:flex relative w-full">
+										<div className="hidden md:flex relative w-full text-contrast-700 hover:text-contrast-600">
 											<button
 												id="search"
 												name="search"
 												value={searchQuery}
-												className="group border px-3 rounded-lg leading-6 flex items-center space-x-2 sm:space-x-4 hover:text-gray-600 transition-colors duration-200 w-full py-2"
-												// className="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 w-full rounded-lg border border-gray-300 w-full h-10 focus:outline-none focus:border-green-500"
+												className="group border border-contrast-400 px-3 rounded-lg leading-6
+													flex items-center space-x-2 sm:space-x-4
+													transition-colors duration-200 w-full py-2"
 												placeholder="Search..."
 												onClick={openModal}
 											>
 												<AiOutlineSearch />
 												<span>Search...</span>
-												<span className="ml-auto text-gray-400 text-sm leading-5 py-0.5 px-1.5 border border-gray-300 rounded-md">
+												<span className="ml-auto text-sm leading-5 py-0.5 px-1.5
+													border border-contrast-400 rounded-md">
                                         Ctrl + K
                                     </span>
 											</button>

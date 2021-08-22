@@ -1,15 +1,18 @@
-use git2::{Repository, Commit, Error, Oid, Signature, ObjectType};
-use std::path::{Path};
+use git2::{Commit, Error, ObjectType, Oid, Repository, Signature};
+use std::fs::File;
+use std::path::Path;
 use termion::color;
 
-use std::fs::File;
-
 /// Make sure that we can find the repo on startup
-// TODO stdin option to clone from the remote repo if it can not open the local one
 pub fn start_up() {
     match Repository::open("./articles") {
         Ok(_) => println!("{}Opened the article repo.{}", color::Fg(color::LightGreen), color::Fg(color::Reset)),
-        Err(e) => panic!("failed to open: {}", e),
+        Err(_) => {
+            let _repo = match Repository::clone("https://github.com/Technicalmc-xyz/articles", "./articles") {
+                Ok(repo) => repo,
+                Err(e) => panic!("failed to clone: {}", e),
+            };
+        }
     };
 }
 
@@ -69,6 +72,7 @@ pub fn add_and_commit(path: &Path, username: &str, message: &str, title: &str) -
         &[&parent_commit],
     )
 }
+
 #[allow(dead_code)]
 fn find_last_commit_file(repo: &Repository, _file: File) -> Result<Commit, Error> {
     let obj = repo.head()?.resolve()?.peel(ObjectType::Commit)?;

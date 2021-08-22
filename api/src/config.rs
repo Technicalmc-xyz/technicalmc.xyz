@@ -4,6 +4,7 @@ use {
     anyhow::Result,
     oauth2::{basic::BasicClient, AuthUrl, ClientId, ClientSecret, RedirectUrl, TokenUrl},
 };
+use std::fs::File;
 
 #[derive(Debug, Deserialize)]
 pub struct AppConfig {
@@ -12,6 +13,7 @@ pub struct AppConfig {
     pub cors_allow_headers: String,
     pub environment_name: String,
     pub default_redirect: String,
+    pub tags: Vec<String>
 }
 
 impl Default for AppConfig {
@@ -22,6 +24,7 @@ impl Default for AppConfig {
             cors_allow_headers: String::from("*"),
             environment_name: String::from("unconfigured"),
             default_redirect: String::from("http://technicalmc.xyz"),
+            tags: vec![String::from("")]
         }
     }
 }
@@ -51,11 +54,20 @@ fn make_client() -> Result<BasicClient> {
     )?))
 }
 
+/// Read the tags from the tag file
+pub fn read_tags_from_file() -> Vec<String> {
+    let file = File::open("../tags.json")
+        .expect("file should open read only");
+    serde_json::from_reader(file)
+        .expect("Tags config is not configured properly")
+}
+
 /// Return a tuple of an app-specific config and a Rocket config.
 pub fn get_rocket_config() -> Result<(AppConfig, Result<BasicClient>)> {
     let app_config = AppConfig {
         environment_name: String::from("local"),
         default_redirect: String::from("http://localhost:3000"),
+        tags: read_tags_from_file(),
         ..Default::default()
     };
     Ok((app_config, make_client()))

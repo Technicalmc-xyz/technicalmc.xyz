@@ -6,7 +6,7 @@ use rocket::serde::json::{Value, json, Json};
 use rocket::outcome::Outcome::{Failure, Success, Forward};
 use std::collections::HashMap;
 use std::convert::TryFrom;
-use crate::models::article_models::{NewArticle, EditArticle};
+use crate::{models::article_models::{NewArticle, EditArticle}, config::{self, AppConfig}};
 
 // Allow some punctiaon but not all
 pub fn char_is_okay(c: &char) -> bool {
@@ -23,7 +23,6 @@ impl<'r> FromData<'r> for NewArticle {
             return Forward(data);
         }
 
-        // FIXME wait for rocket dev to get back
         let article =
             Json::<NewArticle>::from_data(req, data).await.map_failure(|_| {
                 (
@@ -35,21 +34,7 @@ impl<'r> FromData<'r> for NewArticle {
 
         let mut errors = HashMap::new();
 
-        let tags = vec![
-            "Block Resource",
-            "Block Farming",
-            "Mob Resource",
-            "Agriculture",
-            "Animal Husbandry",
-            "World Manipulation",
-            "World Transportation",
-            "Traffic",
-            "Resource Management and Processing",
-            "Duplicate",
-            "Game Mechanic",
-            "Community",
-            "Guides"
-        ];
+        let tags = &req.rocket().state::<AppConfig>().unwrap().tags;
 
         // Check that the title and the description are alphanumeric
         if !(article.title.chars().all(|x| x.is_alphanumeric() || x.is_whitespace())) {
@@ -83,7 +68,7 @@ impl<'r> FromData<'r> for NewArticle {
 
         // Check if the submitted tags are included in the valid tags
         for submitted_tag in &article.tags {
-            if !tags.contains(&&**submitted_tag) {
+            if !tags.contains(submitted_tag) {
                 errors
                     .entry("description")
                     .or_insert_with(|| vec![])
@@ -114,7 +99,7 @@ impl<'r> FromData<'r> for EditArticle {
         if req.content_type() != Some(&content_type) {
             return Forward(data);
         }
-        // FIXME wait for rocket dev to get back
+
         let article =
             Json::<EditArticle>::from_data(req, data).await.map_failure(|_| {
                 (
@@ -123,24 +108,10 @@ impl<'r> FromData<'r> for EditArticle {
                 )
             }).unwrap();
 
-
+        
         let mut errors = HashMap::new();
-
-        let tags = vec![
-            "Block Resource",
-            "Block Farming",
-            "Mob Resource",
-            "Agriculture",
-            "Animal Husbandry",
-            "World Manipulation",
-            "World Transportation",
-            "Traffic",
-            "Resource Management and Processing",
-            "Duplicate",
-            "Game Mechanic",
-            "Community",
-            "Guides"
-        ];
+        
+        let tags = &req.rocket().state::<AppConfig>().unwrap().tags;
 
         if !(article.title.chars().all(|x| x.is_alphanumeric() || x.is_whitespace())) {
             errors
@@ -176,7 +147,7 @@ impl<'r> FromData<'r> for EditArticle {
 
         // Check if the submitted tags are included in the valid tags
         for submitted_tag in &article.tags {
-            if !tags.contains(&&**submitted_tag) {
+            if !tags.contains(submitted_tag) {
                 errors
                     .entry("description")
                     .or_insert_with(|| vec![])

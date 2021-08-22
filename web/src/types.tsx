@@ -32,21 +32,6 @@ export interface User {
     rank: number;
 }
 
-export const tags: string[] = [
-    "Block Resource",
-    "Block Farming",
-    "Mob Resource",
-    "Agriculture",
-    "Animal Husbandry",
-    "World Manipulation",
-    "World Transportation",
-    "Traffic",
-    "Resource Management and Processing",
-    "Duplicate",
-    "Game Mechanic",
-    "Community",
-    "Guides",
-];
 
 export const Ranks: { [key: number]: string } = {
     0: "Banned" as const,

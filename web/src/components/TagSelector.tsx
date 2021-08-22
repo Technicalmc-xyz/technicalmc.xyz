@@ -1,6 +1,6 @@
-import { tags } from "../types";
 import { FC } from "react";
 import Tag from "./Tag";
+const tags = require('../../../tags.json');
 
 interface TagSelectorProps {
     selectedTags: string[];
@@ -36,4 +36,5 @@ const TagSelector: FC<TagSelectorProps> = ({
         </div>
     );
 };
+
 export default TagSelector;

@@ -72,7 +72,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
     return (
         <div className="min-h-screen" {...props}>
             <div className="flex flex-row min-h-screen text-gray-800">
-                <aside className="sidebar w-64 shadow transform -translate-x-full md:translate-x-0 transition-transform duration-150 ease-in z-10">
+                <aside className="sidebar w-64 shadow transform -translate-x-full md:translate-x-0 transition-transform hidden md:block duration-150 ease-in z-10 bg-contrast-0">
                     <div className="sidebar-header flex items-center justify-center py-4">
                         <div className="inline-flex">
                             <a
@@ -168,7 +168,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
                 </aside>
 				<div className="min-h-screen w-full flex flex-col z-0">
 					<div className="px-12 h-full">
-						<div className="sticky py-8 top-0 bg-white">
+						<div className="py-8 top-0 bg-white">
 							<header className="header bg-white">
 								<div className="header-content flex items-center flex-row">
 									<div className="hidden md:flex relative w-full">

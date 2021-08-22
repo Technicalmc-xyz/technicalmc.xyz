@@ -208,30 +208,26 @@
     }
 }
 
+/*
+ Lower contrast numbers should be used
+ for background while higher numbers should be
+ used for text, and basically for things you
+ want the user to see.
+ */
 html:root {
-    --cl-contrast-0: white;
-    --cl-contrast-50: "#fafafa";
-    --cl-contrast-100: "#f5f5f5";
-    --cl-contrast-200: "#e5e5e5";
-    --cl-contrast-300: "#d4d4d4";
-    --cl-contrast-400: "#a3a3a3";
-    --cl-contrast-500: "#737373";
-    --cl-contrast-600: "#525252";
-    --cl-contrast-700: "#404040";
-    --cl-contrast-800: "#262626";
-    --cl-contrast-900: "#171717";
+    --cl-contrast-300: white;
+    --cl-contrast-400: #d2d2d2;
+    --cl-contrast-500: #ababab;
+    --cl-contrast-600: #6c6c6c;
+    --cl-contrast-700: #3d3d3d;
+    --cl-contrast-800: #1c1c1c;
 }
 
 html.dark:root {
-    --cl-contrast-0: black;
-    --cl-contrast-50: "#171717";
-    --cl-contrast-100: "#262626";
-    --cl-contrast-200: "#404040";
-    --cl-contrast-300: "#525252";
-    --cl-contrast-400: "#737373";
-    --cl-contrast-500: "#a3a3a3";
-    --cl-contrast-600: "#d4d4d4";
-    --cl-contrast-700: "#e5e5e5";
-    --cl-contrast-800: "#f5f5f5";
-    --cl-contrast-900: "#fafafa";
+    --cl-contrast-300: #2b2b2b;
+    --cl-contrast-400: #404040;
+    --cl-contrast-500: #535353;
+    --cl-contrast-600: #888585;
+    --cl-contrast-700: #a7a7a7;
+    --cl-contrast-800: #ededed;
 }

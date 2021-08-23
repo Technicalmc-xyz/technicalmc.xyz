@@ -63,36 +63,48 @@ diesel migration run
 ## Database Startup
 Install podman. See [here](https://podman.io/getting-started/installation).
 
-1. `chmod +x start_podman`
-2. `./start_podman`
+Once you have installed podman successfully, you can run the container 
+pod with the following command:
+
+```
+podman play kube tmc-wiki-pod.yaml
+```
 
 ### Manually start podman containers
+If you would like to start the containers manually you can do that with:
 ```
-podman pod create -n tmc-wiki-pod -p 8080:8080,5432:5432
+podman pod create -n tmc-wiki-pod -p 5432:5432
 ```
+
+Check to see that the pod was created:
 ```
 podman ps -a --pod
 ```
+
+Run the postgrest server
 ```
-podman run -dt --pod tmc-wiki-pod --rm --name postgres-wiki -e 
-```
-```
-POSTGRES_PASSWORD=pass -e POSTGRES_USER=user -e POSTGRES_DB=wiki -v 
-```
-```
-pgdata:/var/lib/postgresql/data postgres
+podman run -dt --pod tmc-wiki-pod --rm --name postgres-wiki -e POSTGRES_PASSWORD=pass -e POSTGRES_USER=user -e POSTGRES_DB=wiki -v pgdata:/var/lib/postgresql/data postgres
 ```
 
 ### Start backup database container
+If you would like to run the backup container you must also add the port 
+mapping to the pod, which can only be done when the pod is created. 
 
 ```
-podman run --pod tmc-wiki-pod --rm -u postgres:postgres -e 
+podman pod create -n tmc-wiki-pod -p 5432:5432,8080:8080
+```
+
+Check to see that the pod was created:
+```
+podman ps -a --pod
+```
+
+Run the postgrest server:
+```
+podman run -dt --pod tmc-wiki-pod --rm --name postgres-wiki -e POSTGRES_PASSWORD=pass -e POSTGRES_USER=user -e POSTGRES_DB=wiki -v pgdata:/var/lib/postgresql/data postgres
 ```
 ```
-POSTGRES_HOST=postgres-wiki -e POSTGRES_DB=wiki -e POSTGRES_USER=user -e 
-```
-```
-POSTGRES_PASSWORD=pass -e prodrigestivill/postgres-backup-local
+podman run --pod tmc-wiki-pod --rm -u postgres:postgres -e POSTGRES_HOST=postgres-wiki -e POSTGRES_DB=wiki -e POSTGRES_USER=user -e POSTGRES_PASSWORD=pass -e prodrigestivill/postgres-backup-local
 ```
 
 ### Connect to the database to run SQL

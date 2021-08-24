@@ -61,7 +61,7 @@ const About: NextPage = () => (
         <h1 className="text-2xl w-full text-center">Mission</h1>
         <hr className="dividing-line" />
         <p className="mt-5">
-            The mission for the Technical Minecraft Wiki is to gather everyone's
+            The mission for the Technical Minecraft Wiki is to gather everyone&apos;s
             information into one spot. We believe this will significantly better
             the community by making it easier for new players to start exploring
             the world of technical minecraft.
@@ -91,7 +91,7 @@ const About: NextPage = () => (
             like to contribute.
         </p>
         <p className="mt-5">
-            The site is run completely out of Jakku's pocket and although he is
+            The site is run completely out of Jakku&apos;s pocket and although he is
             glad to run it, donations are greatly appreciated and can be donated
             to him through his{" "}
             <u>

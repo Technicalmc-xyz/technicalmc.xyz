@@ -50,7 +50,7 @@ const Index = () => (
                 }}
             />
         </Head>
-        <div className="flex flex-column flex-wrap items-center rounded border p-5 mb-5">
+        <div className="flex flex-column flex-wrap items-center rounded-lg border border-contrast-400 p-5 mb-5">
             <div className="flex w-full">
                 <h1 className="w-full text-xl">
                     Welcome to the Technical Minecraft Wiki!

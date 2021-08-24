@@ -207,3 +207,37 @@
         transform: translate(24px, 0);
     }
 }
+
+html {
+    transition: background-color,
+                color,
+                border-top-color,
+                border-bottom-color,
+                border-left-color,
+                border-right-color,
+                outline-color        ease 1s;
+}
+
+/*
+ Lower contrast numbers should be used
+ for background while higher numbers should be
+ used for text, and basically for things you
+ want the user to see.
+ */
+html:root {
+    --cl-contrast-300: 255, 255, 255;
+    --cl-contrast-400: 210, 210, 210;
+    --cl-contrast-500: 171, 171, 171;
+    --cl-contrast-600: 108, 108, 108;
+    --cl-contrast-700: 61, 61, 61;
+    --cl-contrast-800: 28, 28, 28;
+}
+
+html.dark:root {
+    --cl-contrast-300: 43, 43, 43;
+    --cl-contrast-400: 64, 64, 64;
+    --cl-contrast-500: 83, 83, 83;
+    --cl-contrast-600: 136, 133, 133;
+    --cl-contrast-700: 167, 167, 167;
+    --cl-contrast-800: 237, 237, 237;
+}

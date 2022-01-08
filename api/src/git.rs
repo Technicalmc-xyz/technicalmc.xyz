@@ -1,27 +1,41 @@
+use std::path::{Path, PathBuf};
+use std::sync::{Arc, Mutex, MutexGuard};
+
 use git2::{Commit, Error, ObjectType, Oid, Repository, Signature};
-use std::fs::File;
-use std::path::Path;
 use termion::color;
 
-/// Make sure that we can find the repo on startup
-pub fn start_up() {
-    match Repository::open("./articles") {
-        Ok(_) => println!("{}Opened the article repo.{}", color::Fg(color::LightGreen), color::Fg(color::Reset)),
-        Err(_) => {
-            let _repo = match Repository::clone("https://github.com/Technicalmc-xyz/articles", "./articles") {
-                Ok(repo) => repo,
-                Err(e) => panic!("failed to clone: {}", e),
-            };
-        }
-    };
+pub fn git_repo_path() -> Result<PathBuf, ()> {
+    let path = dirs::home_dir();
+    if let Some(home) = path {
+        let path= home.join(".wiki/articles");
+        Ok(path)
+    } else {
+        Err(())
+    }
 }
 
-/// Open up a repo
-pub fn open() -> Result<Repository, Error> {
-    return match Repository::open("./articles") {
-        Ok(repo) => Ok(repo),
-        Err(e) => Err(e)
-    };
+/// Make sure that we can find the repo on startup
+pub fn start_up() -> Arc<Mutex<Repository>> {
+    match git_repo_path() {
+        Ok(path) => {
+            match Repository::open(&path) {
+                Ok(repo) => {
+                    println!("{}Found the article repo.{}", color::Fg(color::LightGreen), color::Fg(color::Reset));
+                    return Arc::new(Mutex::new(repo));
+                }
+                Err(_) => {
+                    match Repository::clone("https://github.com/Technicalmc-xyz/articles", &path) {
+                        Ok(repo) => {
+                            println!("{}Cloned the article repo into {:?}{}", color::Fg(color::LightGreen), &path, color::Fg(color::Reset));
+                            return Arc::new(Mutex::new(repo));
+                        }
+                        Err(e) => panic!("failed to clone: {}", e),
+                    };
+                }
+            };
+        }
+        Err(_) => panic!("We could not find your home dir")
+    }
 }
 
 /// Display a commit
@@ -38,22 +52,22 @@ pub fn display_commit(commit: &Commit) {
 
 /// Display a Commit with an Oid, for example if you want to display a
 /// commit after you commit to repo
-pub fn display_commit_by_oid(oid: Oid) -> Result<(), Error> {
-    let repo = open()?;
-    let commit = repo.find_commit(oid)?;
+pub fn display_commit_by_oid(repo: Arc<Mutex<Repository>>, oid: Oid) -> Result<(), Error> {
+    let repo = repo.lock().unwrap();
+    let commit = repo.find_commit(oid).unwrap();
     Ok(display_commit(&commit))
 }
 
 /// Find the last commit of a repo
-fn find_last_commit(repo: &Repository) -> Result<Commit, git2::Error> {
+fn find_last_commit<'a>(repo: &'a MutexGuard<Repository>) -> Result<Commit<'a>, git2::Error> {
     let obj = repo.head()?.resolve()?.peel(ObjectType::Commit)?;
     obj.into_commit().map_err(|_| git2::Error::from_str("Couldn't find commit"))
 }
 
 /// Add and commit a file to the repo
-pub fn add_and_commit(path: &Path, username: &str, message: &str, title: &str) -> Result<Oid, Error> {
-    let repo = open()?;
+pub fn add_and_commit(repo: Arc<Mutex<Repository>>, path: &Path, username: &str, message: &str, title: &str) -> Result<Oid, Error> {
     // Add
+    let repo = repo.lock().expect("COULD NOT UNLOCK MUTEX");
     let mut index = repo.index()?;
     index.add_path(path)?;
     index.write()?;
@@ -71,12 +85,6 @@ pub fn add_and_commit(path: &Path, username: &str, message: &str, title: &str) -
         &tree,
         &[&parent_commit],
     )
-}
-
-#[allow(dead_code)]
-fn find_last_commit_file(repo: &Repository, _file: File) -> Result<Commit, Error> {
-    let obj = repo.head()?.resolve()?.peel(ObjectType::Commit)?;
-    obj.into_commit().map_err(|_| git2::Error::from_str("Couldn't find commit"))
 }
 
 

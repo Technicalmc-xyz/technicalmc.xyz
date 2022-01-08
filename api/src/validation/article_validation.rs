@@ -6,7 +6,7 @@ use rocket::serde::json::{Value, json, Json};
 use rocket::outcome::Outcome::{Failure, Success, Forward};
 use std::collections::HashMap;
 use std::convert::TryFrom;
-use crate::{models::article_models::{NewArticle, EditArticle}, config::{self, AppConfig}};
+use crate::{models::article_models::{NewArticle, EditArticle}, config::{AppConfig}};
 
 // Allow some punctiaon but not all
 pub fn char_is_okay(c: &char) -> bool {

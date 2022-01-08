@@ -1,21 +1,22 @@
+use std::convert::TryFrom;
+use std::path::Path;
+
+use chrono::Utc;
+use diesel::QueryResult;
 use rocket::{get, post, State};
 use rocket::serde::json::json;
-use serde_json::{Value};
-use termion::{color};
-use std::convert::{TryFrom};
+use serde_json::Value;
 
-use crate::responses::{created, ok, APIResponse, bad_request, unprocessable_entity, not_found, internal_server_error, conflict, unauthorized};
+use crate::Cache;
+use crate::config::AppConfig;
 use crate::database::DbConn;
+use crate::git;
 use crate::models::article_models::*;
 use crate::models::user_models::UserModel;
-use crate::Cache;
-use crate::git;
-use diesel::QueryResult;
-use chrono::{Utc};
-
-use std::path::Path;
+use crate::responses::{APIResponse, bad_request, conflict, created, internal_server_error, not_found, ok, unauthorized, unprocessable_entity};
 use crate::webhooks::DiscordWebhook;
-
+use crate::utils::print_error;
+use crate::git::display_commit_by_oid;
 
 #[get("/all-articles")]
 pub async fn get_articles(_user: &UserModel, db: DbConn) -> Result<APIResponse, APIResponse> {
@@ -43,6 +44,7 @@ pub async fn get_article(
     db: DbConn,
     _urn_title: String,
     cache: &State<Cache>,
+    app_config: &State<AppConfig>
 ) -> Result<APIResponse, APIResponse> {
     let (article, _urn_title): (Result<ArticleModel, diesel::result::Error>, String) = db.run(move |c| {
         let article = ArticleModel::find_public(&_urn_title, c);
@@ -50,7 +52,7 @@ pub async fn get_article(
     }).await;
     return match article {
         Ok(result) => {
-            result.send_article(&_urn_title, &cache)
+            result.send_article(&_urn_title, &cache, &app_config.repo_path)
         }
 
         Err(diesel::result::Error::NotFound) => {
@@ -66,7 +68,7 @@ pub async fn get_article(
                         ArticleModel::find_by_id(&article.article_id, c)
                     }).await;
                     match found_article {
-                        Ok(article) => article.send_article(&article.urn_title, cache),
+                        Ok(article) => article.send_article(&article.urn_title, cache, &app_config.repo_path),
                         Err(_) => Ok(not_found().message(&*format!("Sorry we could not find {}", _urn_title)))
                     }
                 }
@@ -88,18 +90,11 @@ pub async fn new_article(
     body: Result<NewArticle, Value>,
     _user: &UserModel,
     cache: &State<Cache>,
+    app_config: &State<AppConfig>,
 ) -> Result<APIResponse, APIResponse> {
+    let repo = app_config.repo.clone();
     let article_data = body.map_err(unprocessable_entity)?;
-    let new_article = WriteArticle {
-        db: NewDBArticle {
-            urn_title: article_data.title.clone().to_lowercase().replace(" ", "_"),
-            title: article_data.title,
-            tags: article_data.tags,
-            description: article_data.description,
-        },
-        body: article_data.body,
-    };
-
+    let new_article = WriteArticle::new(article_data);
     let (created_db_article, new_article): (Result<ArticleModel, diesel::result::Error>, WriteArticle) =
         db.run(move |c| {
             let created_db_article = new_article.db.create(c);
@@ -108,15 +103,15 @@ pub async fn new_article(
 
     return match created_db_article {
         Ok(_) => {
-            match new_article.write_file(cache) {
-                Ok(path) => {
-                    match git::add_and_commit(Path::new(&path), &*_user.username, "created article", &*new_article.db.title) {
-                        Ok(c) => git::display_commit_by_oid(c),
+            match new_article.write_file(&*app_config.repo_path, cache) {
+                Ok(file_name) => {
+                    match git::add_and_commit(repo, &*file_name, &*_user.username, "created article", &*new_article.db.title) {
+                        Ok(oid) => display_commit_by_oid(app_config.repo.clone(), oid)?,
                         Err(_) => {
-                            println!("Failed to add the file to the git :(");
+                            print_error(format!("Failed to add {:?} to the vcs", &*file_name));
                             return Ok(internal_server_error().message("Failed to add file to vcs"));
                         }
-                    }.unwrap();
+                    };
                     Ok(created().data(json!(new_article)))
                 }
                 Err(e) => Ok(bad_request().data(json!(e.to_string())))
@@ -136,6 +131,7 @@ pub async fn edit_article(
     _urn_title: String,
     _user: &UserModel,
     cache: &State<Cache>,
+    app_config: &State<AppConfig>,
 ) -> Result<APIResponse, APIResponse> {
     let article_data = body.map_err(unprocessable_entity)?;
 
@@ -147,7 +143,7 @@ pub async fn edit_article(
 
     match article_query {
         Ok(article) => {
-            // Check if the edit is outdated
+            // Check if the edit count is outdated, else do nothing
             if article.edit_count != article_data.edit_count {
                 return Ok(bad_request().data(json!("This article has been edited while you were editing it! Salvage your work and retry")));
             }
@@ -177,6 +173,7 @@ pub async fn edit_article(
         }
         _ => return Ok(internal_server_error().message("Could not process this request"))
     };
+    // Now we know the edit count and the name are good we can move on
     let valid_article = WriteEditArticle {
         db: EditDBArticle {
             urn_title: article_data.title.to_lowercase().replace(" ", "_"),
@@ -192,9 +189,8 @@ pub async fn edit_article(
         }),
     };
 
-    // Detect a change in the article title
+    // Handle title change
     if !(valid_article.db.urn_title.eq(&_urn_title)) {
-        // We need to clone title otherwise we get a borrowing error because urn_title is brought out of scope
         let title = _urn_title.clone();
         let (id, title, check_redirect): (i32, String, QueryResult<RedirectModel>) = db.run(move |c| {
             // Check if there are any redirects in the redirect table that have the same title as the new submitted one
@@ -204,17 +200,14 @@ pub async fn edit_article(
             (id, title, check_redirect)
         }).await;
         // Check if the redirect was a unique violation
-        //FIXME this is bad way to do this
-        match check_redirect {
-            Err(diesel::result::Error::DatabaseError(diesel::result::DatabaseErrorKind::UniqueViolation, _, )) => {
-                return Ok(conflict().data(json!("This article already exists!")));
-            }
-            _ => {}
+        if let Err(diesel::result::Error::DatabaseError(diesel::result::DatabaseErrorKind::UniqueViolation, _, )) = check_redirect {
+            return Ok(conflict().data(json!("This article already exists!")));
         }
+
         // Now that we know that the article title isn't already in the redirect table and we have the id
         // according to the old title we can create a new redirect and create it inside the table
         db.run(move |c| {
-           NewRedirect {
+            NewRedirect {
                 article_id: id,
                 old_title: title,
             }.create(c).unwrap();
@@ -232,15 +225,15 @@ pub async fn edit_article(
         Err(_) => return Ok(internal_server_error().data(json!("Something has gone while editing the article"))),
     };
 
-    return match valid_article.write_edit_file(_urn_title, cache) {
-        Ok(p) => {
-            match git::add_and_commit(Path::new(&p), &*_user.username, &article_data.message, &valid_article.db.title) {
-                Ok(c) => git::display_commit_by_oid(c),
+    return match valid_article.write_edit_file(&*app_config.repo_path, _urn_title, cache) {
+        Ok(file_name) => {
+            match git::add_and_commit(app_config.repo.clone(), Path::new(&file_name), &*_user.username, &article_data.message, &valid_article.db.title) {
+                Ok(c) => display_commit_by_oid(app_config.repo.clone(), c)?,
                 Err(_) => {
-                    println!("{}Failed to add the article to the vcs", color::Fg(color::Red));
+                    print_error(format!("Failed to add {:?} to the vcs", file_name));
                     return Ok(internal_server_error().message("Failed to add file to vcs"));
                 }
-            }.unwrap();
+            };
             Ok(ok().data(json!(article)))
         }
         Err(e) => Ok(bad_request().data(json!(e.to_string())))

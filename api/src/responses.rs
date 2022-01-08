@@ -42,6 +42,13 @@ impl From<std::env::VarError> for APIResponse {
         internal_server_error()
     }
 }
+
+impl From<git2::Error> for APIResponse {
+    fn from(_: git2::Error) -> Self {
+        internal_server_error().message("Something went wrong saving your file to the version control system")
+    }
+}
+
 impl<'r> Responder<'r, 'static> for APIResponse {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         let body = self.data;

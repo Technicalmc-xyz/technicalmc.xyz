@@ -11,7 +11,7 @@ diesel = { version = "1.4", features = ["postgres", "numeric", "uuidv07", "chron
 diesel_full_text_search = { git = "https://github.com/diesel-rs/diesel_full_text_search", branch = "master"}
 async-trait = "0.1.48"
 chrono = { version = "0.4", features = ["serde"] }
-serde = {version = "1.0.8", features = ["derive"]}
+serde = {version = "1.0.8", features = ["derive", "rc"]}
 serde_json = "1"
 oauth2 = { version = "3.0", features = ["futures-03", "reqwest-010"], default-features = false }
 reqwest = { version = "0.11", features = ["json"] }
@@ -22,6 +22,7 @@ anyhow = "1.0.38"
 url = { version = "2.1", features = ["serde"] }
 termion = "1.5.6"
 git2 = "0.13"
+dirs = "4.0"
 
 [dependencies.rocket]
 version = "0.5.0-rc.1"

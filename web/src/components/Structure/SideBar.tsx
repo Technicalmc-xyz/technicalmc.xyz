@@ -108,15 +108,9 @@ export const SideBar: React.FC<{
 							/>
 						</>
 					) : null}
-
-					<li className="my-px">
-					<span className="flex font-medium text-sm text-contrast-700 px-4 my-4 uppercase">
-						UI
-					</span>
-					</li>
 					<span onClick={() => setDark(!dark)}>
 						<MenuItem
-							name={`${dark ? "Light" : "Dark"} Mode`}
+							name=""
 							href={null}
 							icon={dark ? <FaLightbulb/> : <FaRegLightbulb/>}
 						/>

@@ -1,12 +1,15 @@
+extern crate anyhow;
 #[macro_use]
 extern crate diesel;
-extern crate dotenv;
 extern crate diesel_full_text_search;
-extern crate anyhow;
+extern crate dotenv;
+
 use std::collections::HashMap;
-use rocket::{catchers, routes, Rocket, Build};
+use std::sync::{Arc, Mutex};
+
+use git2::Repository;
+use rocket::{Build, catchers, Rocket, routes};
 use rocket::serde::json::Value;
-use std::sync::Mutex;
 
 pub mod schema;
 pub mod models;
@@ -18,9 +21,10 @@ pub mod responses;
 pub mod validation;
 pub mod git;
 mod webhooks;
-// pub mod webhooks;
+mod utils;
 
 pub type Cache = Mutex<HashMap<String, Value>>;
+pub type Repo = Arc<Mutex<Repository>>;
 
 pub fn rocket_factory() -> Result<Rocket<Build>, String> {
     git::start_up();

@@ -9,18 +9,20 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { SideBar } from "./SideBar";
 import { DarkModeCtx } from "../../hooks/use-dark-mode";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaLightbulb, FaRegLightbulb } from "react-icons/fa";
+import { MenuItem } from ".";
 
 interface LayoutProps {
-    children: ReactNode;
+	children: ReactNode;
 }
 
 const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
-    const [authenticated, setAuthenticated] = useState<boolean>(false);
-    const [user, setUser] = useState<User>();
-    const [searchResults, setSearchResults] = useState<[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>("");
+	const [authenticated, setAuthenticated] = useState<boolean>(false);
+	const [user, setUser] = useState<User>();
+	const [searchResults, setSearchResults] = useState<[]>([]);
+	const [searchQuery, setSearchQuery] = useState<string>("");
 
-    // TODO: Save theme preference in the cookies (or somewhere else) so that
+	// TODO: Save theme preference in the cookies (or somewhere else) so that
 	// the server can render it.
 	const [dark, setDark] = useState(false);
 
@@ -36,45 +38,45 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
 	}, [dark]);
 
 	// Modal Logic
-    const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
-    Modal.setAppElement("#__next");
+	const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+	const openModal = () => setIsOpen(true);
+	const closeModal = () => setIsOpen(false);
+	Modal.setAppElement("#__next");
 
-    useHotkeys("ctrl+k", (event) => {
-        openModal();
-        event.preventDefault();
-    });
+	useHotkeys("ctrl+k", (event) => {
+		openModal();
+		event.preventDefault();
+	});
 
-    const clearSearchQuery = () => setSearchQuery("");
+	const clearSearchQuery = () => setSearchQuery("");
 
-    useEffect(() => {
-        getUser()
-            .then((res) => {
-                if (res.status !== 401) setAuthenticated(true);
-                return res.json();
-            })
-            .then((res) => setUser(res))
-            .catch((e) => console.log(e));
-    }, []);
+	useEffect(() => {
+		getUser()
+			.then((res) => {
+				if (res.status !== 401) setAuthenticated(true);
+				return res.json();
+			})
+			.then((res) => setUser(res))
+			.catch((e) => console.log(e));
+	}, []);
 
-    const handleSearchChange = (value: string) => {
-        setSearchQuery(value);
-        if (value) {
-            fetch(`/api/search/${value}`)
-                .then((res) => res.json())
-                .then((res) => setSearchResults(res))
-                .catch((err) => console.log(err));
-        } else return;
-    };
+	const handleSearchChange = (value: string) => {
+		setSearchQuery(value);
+		if (value) {
+			fetch(`/api/search/${value}`)
+				.then((res) => res.json())
+				.then((res) => setSearchResults(res))
+				.catch((err) => console.log(err));
+		} else return;
+	};
 
-    const getUser = async () => fetch("/api/user/@me");
+	const getUser = async () => fetch("/api/user/@me");
 
-    return (
-    	<DarkModeCtx.Provider value={{ dark, setDark }}>
+	return (
+		<DarkModeCtx.Provider value={{ dark, setDark }}>
 			<div className="min-h-screen bg-contrast-300 text-contrast-700" {...props}>
 				<div className="flex flex-row min-h-screen">
-					<SideBar authenticated={authenticated} user={user}/>
+					<SideBar authenticated={authenticated} user={user} />
 
 					<div className="min-h-screen w-full flex flex-col z-0">
 						<div className="px-12 h-full">
@@ -96,8 +98,8 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
 												<span>Search...</span>
 												<span className="ml-auto text-sm leading-5 py-0.5 px-1.5
 													border border-contrast-400 rounded-md">
-                                        Ctrl + K
-                                    </span>
+													Ctrl + K
+												</span>
 											</button>
 										</div>
 										{user ? (
@@ -107,6 +109,13 @@ const Layout: FC<LayoutProps> = ({ children, ...props }: LayoutProps) => {
 											/>
 										) : null}
 									</div>
+									<span onClick={() => setDark(!dark)}>
+										<MenuItem
+											name=""
+											href={null}
+											icon={dark ? <FaLightbulb /> : <FaRegLightbulb />}
+										/>
+									</span>
 								</header>
 								<TopSearchBar
 									searchResults={searchResults}

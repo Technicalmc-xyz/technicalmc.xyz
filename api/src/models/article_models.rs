@@ -1,34 +1,36 @@
-use diesel::{
-    self,
-    prelude::*,
-    RunQueryDsl,
-    QueryDsl,
-    pg::Pg,
-    update,
-    expression::dsl::not
-};
-use rocket::State;
-use rocket::serde::json::{Value, json};
-use serde::{Deserialize, Serialize};
-use chrono::{NaiveDateTime};
-use termion::color;
-
 use std::fmt;
 use std::fs::{File, OpenOptions, read_to_string};
-use std::path::{Path};
-use std::io::{Write, Error};
+use std::io::Write;
+use std::path::{Path, PathBuf};
+
+use chrono::NaiveDateTime;
+use diesel::{
+    self,
+    expression::dsl::not,
+    pg::Pg,
+    prelude::*,
+    QueryDsl,
+    RunQueryDsl,
+    update,
+};
+use rocket::serde::json::{json, Value};
+use rocket::State;
+use serde::{Deserialize, Serialize};
+use termion::color;
 
 use crate::Cache;
+use crate::responses::{APIResponse, internal_server_error, ok};
 use crate::schema::articles;
 use crate::schema::articles::dsl::*;
 use crate::schema::articles::dsl::id as article_id;
 use crate::schema::redirects;
 use crate::schema::redirects::dsl::*;
-use crate::responses::{APIResponse, ok, internal_server_error};
+use crate::utils::print_success;
 
 #[derive(Serialize, Deserialize)]
 pub struct Articles(pub Vec<ArticleModel>);
 
+//ArticleModel is a row in the database
 #[derive(Debug, Serialize, Deserialize, Queryable, Identifiable, AsChangeset, Associations)]
 #[table_name = "articles"]
 pub struct ArticleModel {
@@ -144,12 +146,13 @@ pub struct NewRedirect {
     pub old_title: String,
 }
 
-pub fn find_article_by_id(_id: i32, conn: &PgConnection) -> QueryResult<ArticleModel>{
+pub fn find_article_by_id(_id: i32, conn: &PgConnection) -> QueryResult<ArticleModel> {
     articles
         .find(_id)
         .select(ARTICLE_COLUMNS)
         .first(conn)
 }
+
 impl RedirectModel {
     pub fn find(_urn_title: &String, conn: &PgConnection) -> QueryResult<RedirectModel> {
         redirects
@@ -233,27 +236,28 @@ impl ArticleModel {
         Ok(())
     }
     /// Send an article
-    pub fn send_article(&self, _urn_title: &String, cache: &State<Cache>) -> Result<APIResponse, APIResponse>{
-        let path_name = format!("articles/{}.json", &_urn_title);
-        let contents: Option<Value>;
+    pub fn send_article(&self, _urn_title: &String, cache: &State<Cache>, repo_path: &PathBuf) -> Result<APIResponse, APIResponse> {
+        let file_name = format!("{}.json", &_urn_title);
+        let path_name = repo_path.join(file_name);
+        let article_body: Option<Value>;
         let mut cached_articles = cache.lock().expect("Couldn't opened locked cache");
         // Try and get the cached article, if it doesnt exist read from the file and then add to cache
         if cached_articles.contains_key(&*_urn_title) {
-            contents = match cached_articles.get(&*_urn_title) {
+            article_body = match cached_articles.get(&*_urn_title) {
                 Some(article) => Some(article.to_owned()),
                 _ => None
             };
             println!("{}Read article from cache!", color::Fg(color::Blue));
         } else {
-            contents = match serde_json::from_str(&*match read_to_string(path_name) {
+            article_body = match serde_json::from_str(&*match read_to_string(path_name) {
                 Ok(x) => x,
                 Err(_) => return Ok(internal_server_error().message("Could not read the article from the file"))
             }) {
                 Ok(x) => x,
                 Err(_) => return Ok(internal_server_error().message("The body of the article may be corrupt"))
             };
-            cached_articles.insert(String::from(_urn_title), contents.clone().unwrap());
-            println!("{}Read article from file!", color::Fg(color::Yellow));
+            cached_articles.insert(String::from(_urn_title), article_body.clone().unwrap());
+            print_success(String::from("Article read from file system and added to the cache."))
         }
         Ok(ok().data(json!({
                 "urn_title": _urn_title,
@@ -265,7 +269,7 @@ impl ArticleModel {
                 "edit_count": self.edit_count,
                 "publicized": self.publicized,
                 "featured": self.featured,
-                "body": contents,
+                "body": article_body,
             })))
     }
 }
@@ -304,22 +308,30 @@ impl NewDBArticle {
 
 impl WriteArticle {
     /// Write to a file for a new article
-    pub fn write_file(&self, cache: &State<Cache>) -> Result<String, Error> {
+    pub fn write_file(&self, repo_path: &Path, cache: &State<Cache>) -> Result<PathBuf, std::io::Error> {
         let file_name = format!("{}.json", self.db.urn_title.to_lowercase().replace(" ", "_"));
-        let path_name = format!("articles/{}", &file_name);
-        let path = Path::new(&path_name);
-        let display = path.display();
-
-        let mut file = match File::create(&path) {
-            Err(why) => panic!("couldn't create {}: {}", display, why),
+        let path_name = repo_path.join(&file_name);
+        //Try and create the new file
+        let mut file = match File::create(&path_name) {
+            Err(err) => return Err(err),
             Ok(file) => file,
         };
-
         let mut cached_articles = cache.lock().expect("Lock shared data");
         cached_articles.insert(self.db.urn_title.clone(), self.body.to_owned());
-        match file.write_all(&serde_json::to_vec(&self.body).unwrap()) {
-            Ok(_) => Ok(file_name),
+        match file.write_all(&serde_json::to_vec(&self.body)?) {
+            Ok(_) => Ok(PathBuf::from(file_name)),
             Err(e) => Err(e)
+        }
+    }
+    pub fn new(article: NewArticle) -> Self {
+        WriteArticle {
+            db: NewDBArticle {
+                urn_title: article.title.clone().to_lowercase().replace(" ", "_"),
+                title: article.title,
+                tags: article.tags,
+                description: article.description,
+            },
+            body: article.body,
         }
     }
 }
@@ -338,17 +350,19 @@ impl EditDBArticle {
 
 impl WriteEditArticle {
     /// Update the body contents of a article
-    pub fn write_edit_file(&self, default_urn_title: String, cache: &State<Cache>) -> Result<String, std::io::Error> {
+    pub fn write_edit_file(&self, repo_path: &Path, default_urn_title: String, cache: &State<Cache>) -> Result<PathBuf, std::io::Error> {
         // Check if the title changed
-        let path_name: String;
-        let file_name: String;
+        let path_name: PathBuf;
+        let file_name: PathBuf;
         if default_urn_title.eq(&self.db.urn_title) {
-            file_name = format!("{}.json", default_urn_title);
-            path_name = format!("articles/{}", file_name);
+            file_name = PathBuf::from(format!("{}.json", default_urn_title));
+            path_name = repo_path.join(&file_name);
         } else {
-            file_name = format!("{}.json", &self.db.urn_title);
-            std::fs::rename(format!("articles/{}.json", default_urn_title), format!("articles/{}", file_name))?;
-            path_name = format!("articles/{}", file_name);
+            file_name = PathBuf::from(format!("{}.json", &self.db.urn_title));
+            let old_file_path = repo_path.join(PathBuf::from(format!("{}.json", default_urn_title)));
+            let new_file_path = repo_path.join(&file_name);
+            std::fs::rename(old_file_path, &new_file_path)?;
+            path_name = new_file_path.clone();
         }
 
         let mut file = OpenOptions::new()
